@@ -4,20 +4,23 @@ import {
   FormInputLabel,
   SubmitButton,
   ErrMessage,
-} from './Form.styled';
+  Backdrop,
+} from './ModalForm.styled';
 import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useFetchAllQuery, useAddContactMutation } from 'redux/contactsSlice';
 import { RotatingLines } from 'react-loader-spinner';
 import { notification } from 'components/App/App';
+import { createPortal } from 'react-dom';
+import { useSelector } from 'react-redux';
 
-export const ContactForm = () => {
+const modalRoot = document.querySelector('#modal-root');
+
+export const ModalForm = ({ toggleModal }) => {
   const nameID = nanoid();
   const numberID = nanoid();
-  const { data: contacts = [] } = useFetchAllQuery();
-  const [addContact, { isLoading }] = useAddContactMutation();
+  const contacts = useSelector(state.contacts);
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -64,26 +67,33 @@ export const ContactForm = () => {
           `Contact "${name}" has been successfully added`,
           'success'
         );
+        toggleModal();
         reset({ name: '', number: '' });
       })
       .catch(notification);
   };
 
-  return (
-    <AppForm autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
-      <FormInputLabel htmlFor={nameID}>Name</FormInputLabel>
-      <FormInput type="text" {...register('name')} id={nameID} />
-      {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
-      <FormInputLabel htmlFor={numberID}>Number</FormInputLabel>
-      <FormInput type="text" {...register('number')} id={numberID} />
-      {errors.number && <ErrMessage>{errors.number.message}</ErrMessage>}
-      <SubmitButton type="submit" disabled={isLoading}>
-        {isLoading ? (
-          <RotatingLines strokeColor="white" width="12" />
-        ) : (
-          'Submit'
-        )}
-      </SubmitButton>
-    </AppForm>
+  return createPortal(
+    <Backdrop>
+      <div>
+        <button onClick={toggleModal}>X</button>
+        <AppForm autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
+          <FormInputLabel htmlFor={nameID}>Name</FormInputLabel>
+          <FormInput type="text" {...register('name')} id={nameID} />
+          {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
+          <FormInputLabel htmlFor={numberID}>Number</FormInputLabel>
+          <FormInput type="text" {...register('number')} id={numberID} />
+          {errors.number && <ErrMessage>{errors.number.message}</ErrMessage>}
+          <SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <RotatingLines strokeColor="white" width="12" />
+            ) : (
+              'Submit'
+            )}
+          </SubmitButton>
+        </AppForm>
+      </div>
+    </Backdrop>,
+    modalRoot
   );
 };

@@ -1,6 +1,23 @@
 import styled from '@emotion/styled';
 
+export const Backdrop = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000066;
+  backdrop-filter: blur(4px);
+  overflow-y: scroll;
+`;
+
 export const AppForm = styled.form`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+
   display: flex;
   flex-direction: column;
   align-items: center;
