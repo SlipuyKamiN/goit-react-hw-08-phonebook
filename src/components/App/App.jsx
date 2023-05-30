@@ -8,8 +8,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { recoverySession } from 'redux/authOperations';
 import Home from 'pages/Home/Home';
-import PrivateRoute from 'pages/PrivateRoute';
-import PublicRoute from 'pages/PublicRoute';
+import PrivateRoute from 'components/PrivateRoute';
+import PublicRoute from 'components/PublicRoute';
 
 export const App = () => {
   const dispatch = useDispatch();

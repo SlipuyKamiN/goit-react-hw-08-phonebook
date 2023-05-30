@@ -1,6 +1,6 @@
 import { Form, Input, RegisterButton } from './RegisterForm.styled';
 import { useDispatch } from 'react-redux';
-import { createNewUser, logIn } from 'redux/authOperations';
+import { createNewUser } from 'redux/authOperations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -30,7 +30,7 @@ export const RegisterForm = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    // formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });

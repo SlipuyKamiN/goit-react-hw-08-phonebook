@@ -23,7 +23,7 @@ export const LoginForm = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    // formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
