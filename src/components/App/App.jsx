@@ -1,38 +1,41 @@
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { SharedLayout } from 'components/SharedLayout/SharedLayout';
-import Register from 'pages/Register/Register';
-import Login from 'pages/Login/Login';
-import Contacts from 'pages/Contacts/Contacts';
-import ErrorPage from 'components/ErrorPage/ErrorPage';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { recoverySession } from 'redux/authOperations';
-import Home from 'pages/Home/Home';
+import { getAuthStatus } from 'redux/authSelectors';
+import { STATUS } from 'redux/constants';
 import PrivateRoute from 'components/PrivateRoute';
-import PublicRoute from 'components/PublicRoute';
+import RestrictedRoute from 'components/RestrictedRoute';
+const Register = lazy(() => import('pages/Register/Register'));
+const Login = lazy(() => import('pages/Login/Login'));
+const Contacts = lazy(() => import('pages/Contacts/Contacts'));
+const ErrorPage = lazy(() => import('components/ErrorPage/ErrorPage'));
+const Home = lazy(() => import('pages/Home/Home'));
 
 export const App = () => {
   const dispatch = useDispatch();
+  const authStatus = useSelector(getAuthStatus);
 
   useEffect(() => {
     dispatch(recoverySession());
   }, [dispatch]);
 
-  return (
+  return authStatus === STATUS.IDLE ? (
+    <div>Please wait...</div>
+  ) : (
     <Routes>
       <Route path="/" element={<SharedLayout />}>
         <Route index element={<Home />}></Route>
-        <Route
-          path="login"
-          element={<PublicRoute component={Login} redirectTo="/" />}
-        />
+        <Route path="login" element={<RestrictedRoute component={Login} />} />
         <Route
           path="register"
-          element={<PublicRoute component={Register} redirectTo="/" />}
+          element={<RestrictedRoute component={Register} />}
         />
         <Route
           path="contacts"
-          element={<PrivateRoute component={Contacts} redirectTo="/ login" />}
+          element={<PrivateRoute component={Contacts} />}
         />
         <Route path="*" element={<ErrorPage />} />
       </Route>

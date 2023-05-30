@@ -12,7 +12,9 @@ const Contacts = () => {
 
   return (
     <>
-      <AddContactButton onClick={toggleModal}>+</AddContactButton>
+      <AddContactButton onClick={toggleModal} data-open-modal>
+        +
+      </AddContactButton>
       <Filter />
       <ContactList />
       {isModalOpen && <ModalForm toggleModal={toggleModal} />}

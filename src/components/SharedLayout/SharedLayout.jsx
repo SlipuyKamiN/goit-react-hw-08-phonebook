@@ -10,6 +10,7 @@ import appLogo from 'images/pageLogo.png';
 import UserMenu from 'components/UserMenu/UserMenu';
 import { useSelector } from 'react-redux';
 import { getIsLoggedIn } from 'redux/authSelectors';
+import { Suspense } from 'react';
 
 export const SharedLayout = () => {
   const isLoggedIn = useSelector(getIsLoggedIn);
@@ -23,22 +24,27 @@ export const SharedLayout = () => {
         </Link>
         <nav>
           <NavList>
-            <li>
-              <NavigationLink to="/contacts">Contacts</NavigationLink>
-            </li>
-            <li>
-              <NavigationLink to="/login">LogIn</NavigationLink>
-            </li>
-            <li>
-              <NavigationLink to="/register">Register</NavigationLink>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <NavigationLink to="/contacts">Contacts</NavigationLink>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <NavigationLink to="/login">LogIn</NavigationLink>
+                </li>
+                <li>
+                  <NavigationLink to="/register">Register</NavigationLink>
+                </li>
+              </>
+            )}
           </NavList>
         </nav>
         {isLoggedIn && <UserMenu />}
       </Header>
-      {/* <Suspense fallback={<div>Please wait...</div>}> */}
-      <Outlet />
-      {/* </Suspense> */}
+      <Suspense fallback={<div>Please wait...</div>}>
+        <Outlet />
+      </Suspense>
     </Container>
   );
 };

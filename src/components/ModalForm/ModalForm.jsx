@@ -5,6 +5,7 @@ import {
   SubmitButton,
   ErrMessage,
   Backdrop,
+  FormTitle,
 } from './ModalForm.styled';
 import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
@@ -14,6 +15,7 @@ import { RotatingLines } from 'react-loader-spinner';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contactsOperations';
+import { useEffect } from 'react';
 
 const modalRoot = document.querySelector('#modal-root');
 
@@ -49,6 +51,26 @@ export const ModalForm = ({ toggleModal }) => {
     resolver: yupResolver(validationSchema),
   });
 
+  const handleToggleModal = event => {
+    const isEventModalControlElement =
+      event.currentTarget.dataset?.openModal ||
+      event.target.dataset?.closeModal ||
+      event.target.dataset?.backdrop ||
+      event.code === 'Escape';
+
+    if (isEventModalControlElement) {
+      toggleModal();
+      return;
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleToggleModal);
+    return () => {
+      window.removeEventListener('keydown', handleToggleModal);
+    };
+  });
+
   const handleFormSubmit = ({ name, number }) => {
     const normalizedName = name.toLowerCase();
 
@@ -62,15 +84,18 @@ export const ModalForm = ({ toggleModal }) => {
     }
 
     dispatch(addContact({ name, number }));
-    toggleModal();
     reset({ name: '', number: '' });
+    toggleModal();
   };
 
   return createPortal(
-    <Backdrop>
+    <Backdrop data-backdrop onClick={handleToggleModal}>
       <div>
-        <button onClick={toggleModal}>X</button>
+        <button data-close-modal onClick={handleToggleModal}>
+          X
+        </button>
         <AppForm autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
+          <FormTitle>Fill the form below, to add your new contact.</FormTitle>
           <FormInputLabel htmlFor={nameID}>Name</FormInputLabel>
           <FormInput type="text" {...register('name')} id={nameID} />
           {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
@@ -81,7 +106,7 @@ export const ModalForm = ({ toggleModal }) => {
             {false ? (
               <RotatingLines strokeColor="white" width="12" />
             ) : (
-              'Submit'
+              'Add contact'
             )}
           </SubmitButton>
         </AppForm>
