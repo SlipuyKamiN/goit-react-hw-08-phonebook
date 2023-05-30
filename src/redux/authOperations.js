@@ -56,3 +56,22 @@ export const logOut = createAsyncThunk('users/logOut', async (_, thunkAPI) => {
     return response.data;
   } catch (error) {}
 });
+
+export const recoverySession = createAsyncThunk(
+  'users/recovery',
+  async (_, thunkAPI) => {
+    const prevSessionToken = thunkAPI.getState().auth.token;
+
+    if (prevSessionToken === null) {
+      return thunkAPI.rejectWithValue();
+    } else {
+      try {
+        token.set(prevSessionToken);
+        const prevSessionUser = await axios.get('users/current');
+        return prevSessionUser.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  }
+);

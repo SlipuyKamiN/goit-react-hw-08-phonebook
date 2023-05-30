@@ -11,16 +11,17 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { RotatingLines } from 'react-loader-spinner';
-import { notification } from 'components/App/App';
 import { createPortal } from 'react-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/contactsOperations';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export const ModalForm = ({ toggleModal }) => {
   const nameID = nanoid();
   const numberID = nanoid();
-  const contacts = useSelector(state.contacts);
+  const contacts = useSelector(state => state.contacts.contacts);
+  const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -56,21 +57,13 @@ export const ModalForm = ({ toggleModal }) => {
     );
 
     if (isNameAlreadyInContacts) {
-      notification(`"${name}" is already in contacts.`);
+      // notification(`"${name}" is already in contacts.`);
       return;
     }
 
-    addContact({ name, number })
-      .unwrap()
-      .then(() => {
-        notification(
-          `Contact "${name}" has been successfully added`,
-          'success'
-        );
-        toggleModal();
-        reset({ name: '', number: '' });
-      })
-      .catch(notification);
+    dispatch(addContact({ name, number }));
+    toggleModal();
+    reset({ name: '', number: '' });
   };
 
   return createPortal(
@@ -84,8 +77,8 @@ export const ModalForm = ({ toggleModal }) => {
           <FormInputLabel htmlFor={numberID}>Number</FormInputLabel>
           <FormInput type="text" {...register('number')} id={numberID} />
           {errors.number && <ErrMessage>{errors.number.message}</ErrMessage>}
-          <SubmitButton type="submit" disabled={isLoading}>
-            {isLoading ? (
+          <SubmitButton type="submit" disabled={false}>
+            {false ? (
               <RotatingLines strokeColor="white" width="12" />
             ) : (
               'Submit'

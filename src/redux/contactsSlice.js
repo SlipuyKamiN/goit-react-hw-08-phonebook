@@ -8,10 +8,10 @@ const contactsSlice = createSlice({
   initialState,
   extraReducers: {
     [fetchAll.fulfilled](state, action) {
-      state.contacts = [...state.contacts, ...action.payload];
+      state.contacts = [...action.payload];
     },
     [addContact.fulfilled](state, action) {
-      state.contacs = [...state.contacs, action.payload];
+      state.contacts = [...state.contacts, action.payload];
     },
     [deleteContact.fulfilled](state, action) {
       state.contacts = state.contacts.filter(
@@ -20,7 +20,8 @@ const contactsSlice = createSlice({
     },
   },
 });
-export const contacsReducer = contactsSlice.reducer;
+
+export const contactsReducer = contactsSlice.reducer;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 

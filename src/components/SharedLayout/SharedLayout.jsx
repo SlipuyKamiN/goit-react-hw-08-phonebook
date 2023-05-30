@@ -9,9 +9,10 @@ import {
 import appLogo from 'images/pageLogo.png';
 import UserMenu from 'components/UserMenu/UserMenu';
 import { useSelector } from 'react-redux';
+import { getIsLoggedIn } from 'redux/authSelectors';
 
 export const SharedLayout = () => {
-  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  const isLoggedIn = useSelector(getIsLoggedIn);
 
   return (
     <Container>

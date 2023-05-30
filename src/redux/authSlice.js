@@ -1,34 +1,51 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createNewUser, logIn, logOut } from './authOperations';
+import {
+  createNewUser,
+  logIn,
+  logOut,
+  recoverySession,
+} from './authOperations';
 
-const initialState = { name: '', email: '', token: null, isLoggedIn: false };
+const initialState = {
+  user: { name: '', email: '' },
+  token: null,
+  isLoggedIn: false,
+};
 
 const authSlice = createSlice({
-  name: 'user',
+  name: 'auth',
   initialState,
   extraReducers: {
     [createNewUser.fulfilled](state, action) {
-      state.name = action.payload.user.name;
-      state.email = action.payload.user.email;
+      state.user.name = action.payload.user.name;
+      state.user.email = action.payload.user.email;
       state.token = action.payload.token;
       state.isLoggedIn = true;
     },
     [logIn.fulfilled](state, action) {
-      state.name = action.payload.user.name;
-      state.email = action.payload.user.email;
+      state.user.name = action.payload.user.name;
+      state.user.email = action.payload.user.email;
       state.token = action.payload.token;
       state.isLoggedIn = true;
     },
     [logOut.fulfilled](state) {
-      state.name = initialState.name;
-      state.email = initialState.email;
+      state.user.name = initialState.user.name;
+      state.user.email = initialState.user.email;
       state.token = initialState.token;
+      state.isLoggedIn = false;
+    },
+    [recoverySession.fulfilled](state, action) {
+      state.user.name = action.payload.name;
+      state.user.email = action.payload.email;
+      state.isLoggedIn = true;
+    },
+    [recoverySession.rejected](state) {
       state.isLoggedIn = false;
     },
   },
 });
 
-export const userReducer = authSlice.reducer;
+export const authReducer = authSlice.reducer;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 

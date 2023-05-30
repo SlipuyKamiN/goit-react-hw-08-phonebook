@@ -1,26 +1,35 @@
+import { useEffect } from 'react';
 import { ContactsList } from './ContactList.styled';
 import { ContactListItem } from 'components/ContactListItem/ContactListItem';
-import { useSelector } from 'react-redux';
-import { useFetchAllQuery } from 'redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAll } from 'redux/contactsOperations';
+import { getContacts } from 'redux/contactsSelectors';
+import { getIsLoggedIn } from 'redux/authSelectors';
 
 export const ContactList = () => {
-  // const { data: contacts } = useFetchAllQuery();
+  const contacts = useSelector(getContacts);
+  const isLoggedIn = useSelector(getIsLoggedIn);
+  const dispatch = useDispatch();
   const filterValue = useSelector(({ filter }) => filter);
 
-  // const filteredContacts = (() => {
-  //   const normalizedFilter = filterValue.toLowerCase();
-  //   return contacts.filter(({ name }) =>
-  //     name.toLowerCase().includes(normalizedFilter)
-  //   );
-  // })();
+  useEffect(() => {
+    isLoggedIn && dispatch(fetchAll());
+  }, [dispatch, isLoggedIn]);
+
+  const filteredContacts = (() => {
+    const normalizedFilter = filterValue.toLowerCase();
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(normalizedFilter)
+    );
+  })();
 
   return (
     <>
-      {/* <ContactsList>
+      <ContactsList>
         {filteredContacts.map(contact => (
           <ContactListItem key={contact.id} contact={contact} />
         ))}
-      </ContactsList> */}
+      </ContactsList>
     </>
   );
 };
