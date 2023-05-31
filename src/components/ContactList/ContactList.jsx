@@ -25,9 +25,13 @@ export const ContactList = () => {
 
   return (
     <ContactsList>
-      {filteredContacts.map(contact => (
-        <ContactListItem key={contact.id} contact={contact} />
-      ))}
+      {contacts.length > 0 ? (
+        filteredContacts.map(contact => (
+          <ContactListItem key={contact.id} contact={contact} />
+        ))
+      ) : (
+        <span>There are no contacts in your phonebook, yet.</span>
+      )}
     </ContactsList>
   );
 };
