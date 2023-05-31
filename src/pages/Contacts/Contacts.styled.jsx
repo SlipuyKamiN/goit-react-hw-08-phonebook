@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
 
-export const AddContactButton = styled.button`
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  text-align: center;
+export const ContactsWrapper = styled.div`
+  max-width: 100%;
+  margin: 0 auto;
 `;

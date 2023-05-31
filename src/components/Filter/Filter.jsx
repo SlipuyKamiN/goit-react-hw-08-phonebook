@@ -1,26 +1,38 @@
 import { nanoid } from 'nanoid';
-import { FilterWrapper, FilterInput, FilterLabel } from './Filter.styled';
+import {
+  InputWrapper,
+  FilterInput,
+  FilterLabel,
+  AddContactButton,
+  FilterWrapper,
+} from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { filter } from 'redux/filterSlice';
+import { FaUserPlus } from 'react-icons/fa';
 
-export const Filter = () => {
+export const Filter = ({ toggleModal }) => {
   const filterId = nanoid();
   const filterValue = useSelector(({ filter }) => filter);
   const dispatch = useDispatch();
 
   return (
     <FilterWrapper>
-      <FilterLabel htmlFor={filterId}>Find contacts by name</FilterLabel>
-      <FilterInput
-        autoComplete="off"
-        type="text"
-        id={filterId}
-        name="filter"
-        value={filterValue}
-        onChange={e => {
-          dispatch(filter(e.currentTarget.value));
-        }}
-      ></FilterInput>
+      <FilterLabel htmlFor={filterId}>Filter contacts by name</FilterLabel>
+      <InputWrapper>
+        <FilterInput
+          autoComplete="off"
+          type="text"
+          id={filterId}
+          name="filter"
+          value={filterValue}
+          onChange={e => {
+            dispatch(filter(e.currentTarget.value));
+          }}
+        />
+        <AddContactButton onClick={toggleModal} data-open-modal>
+          <FaUserPlus size="20px" />
+        </AddContactButton>
+      </InputWrapper>
     </FilterWrapper>
   );
 };

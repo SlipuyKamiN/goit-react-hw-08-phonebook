@@ -1,11 +1,23 @@
-import { Form, Input, RegisterButton } from './RegisterForm.styled';
 import { useDispatch } from 'react-redux';
 import { createNewUser } from 'redux/authOperations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
+import {
+  AppForm,
+  ErrMessage,
+  FormInput,
+  FormInputLabel,
+  FormTitle,
+  FormWrapper,
+  SubmitButton,
+} from './RegisterForm.styled';
+import { nanoid } from 'nanoid';
 
 export const RegisterForm = () => {
+  const nameID = nanoid();
+  const emailID = nanoid();
+  const passwordID = nanoid();
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -30,7 +42,7 @@ export const RegisterForm = () => {
     register,
     handleSubmit,
     reset,
-    // formState: { errors },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -40,11 +52,24 @@ export const RegisterForm = () => {
     reset({ name: '', email: '', password: '' });
   };
   return (
-    <Form autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
-      <Input type="name" {...register('name')}></Input>
-      <Input type="email" {...register('email')}></Input>
-      <Input type="password" {...register('password')}></Input>
-      <RegisterButton type="submit">Login</RegisterButton>
-    </Form>
+    <FormWrapper>
+      <FormTitle>Please register to get access to application</FormTitle>
+      <AppForm autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
+        <FormInputLabel htmlFor={nameID}>name</FormInputLabel>
+        <FormInput type="name" {...register('name')} id={nameID}></FormInput>
+        {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
+        <FormInputLabel htmlFor={emailID}>Email</FormInputLabel>
+        <FormInput type="email" {...register('email')} id={emailID}></FormInput>
+        {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
+        <FormInputLabel htmlFor={passwordID}>Password</FormInputLabel>
+        <FormInput
+          type="password"
+          {...register('password')}
+          id={passwordID}
+        ></FormInput>
+        {errors.password && <ErrMessage>{errors.password.message}</ErrMessage>}
+        <SubmitButton type="submit">sign up</SubmitButton>
+      </AppForm>
+    </FormWrapper>
   );
 };

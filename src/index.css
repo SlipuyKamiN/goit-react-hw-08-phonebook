@@ -11,6 +11,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: rgb(0, 0, 0);
+  background: radial-gradient(
+    circle,
+    rgba(119, 119, 119, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  background-attachment: fixed;
 }
 
 code {
@@ -41,6 +49,12 @@ a {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  transition: color 250ms linear;
+}
+
+a:hover,
+a:focus {
+  color: #ffffff;
 }
 /* Свойства для корректного отображения картинок */
 img {
@@ -60,4 +74,19 @@ html {
 
 button {
   cursor: pointer;
+}
+
+@keyframes slideIcon {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
 }

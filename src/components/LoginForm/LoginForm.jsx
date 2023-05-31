@@ -1,11 +1,22 @@
-import { Form, Input, LoginButton } from './LoginForm.styled';
+import {
+  AppForm,
+  ErrMessage,
+  FormInput,
+  FormInputLabel,
+  FormTitle,
+  FormWrapper,
+  SubmitButton,
+} from './LoginForm.styled';
 import { useDispatch } from 'react-redux';
 import { logIn } from 'redux/authOperations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
+import { nanoid } from 'nanoid';
 
 export const LoginForm = () => {
+  const emailID = nanoid();
+  const passwordID = nanoid();
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -23,7 +34,7 @@ export const LoginForm = () => {
     register,
     handleSubmit,
     reset,
-    // formState: { errors },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -33,10 +44,21 @@ export const LoginForm = () => {
     reset({ email: '', password: '' });
   };
   return (
-    <Form autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
-      <Input type="email" {...register('email')}></Input>
-      <Input type="password" {...register('password')}></Input>
-      <LoginButton type="submit">Login</LoginButton>
-    </Form>
+    <FormWrapper>
+      <FormTitle>Registered? Please input your data to sign in</FormTitle>
+      <AppForm autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
+        <FormInputLabel htmlFor={emailID}>Email</FormInputLabel>
+        <FormInput type="email" {...register('email')} id={emailID}></FormInput>
+        {errors.email && <ErrMessage>{errors.email.message}</ErrMessage>}
+        <FormInputLabel htmlFor={passwordID}>Password</FormInputLabel>
+        <FormInput
+          type="password"
+          {...register('password')}
+          id={passwordID}
+        ></FormInput>
+        {errors.password && <ErrMessage>{errors.password.message}</ErrMessage>}
+        <SubmitButton type="submit">sign in</SubmitButton>
+      </AppForm>
+    </FormWrapper>
   );
 };

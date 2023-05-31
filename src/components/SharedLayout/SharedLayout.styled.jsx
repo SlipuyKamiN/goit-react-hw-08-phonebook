@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
+import { MdContacts, MdOutlineContacts } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
-  outline: red;
   max-width: 480px;
   padding: 0 20px;
   margin: 0 auto;
@@ -24,28 +24,55 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.header`
+  @media screen and (max-width: 768px) {
+    position: static;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 240px;
+  }
+
+  width: 100%;
+  position: fixed;
+  padding: 0 20px;
+  z-index: 1;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: space-around;
   gap: 20px;
-  width: 100%;
-  /* position: fixed; */
-  border-bottom: 1px solid black;
+  height: 60px;
+  border-bottom: 3px solid black;
 `;
 
-export const ImageLogo = styled.img`
-  width: 50px;
-`;
-
-export const NavList = styled.ul`
+export const LogoWrapper = styled(Link)`
   display: flex;
+  align-items: center;
   gap: 10px;
 `;
 
-export const NavigationLink = styled(NavLink)`
-  text-decoration: none;
+export const AppLogo = styled.div`
+  position: relative;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+`;
 
-  &.active {
-    border-bottom: 1px solid red;
-  }
+export const ContactsLogo1 = styled(MdContacts)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: slideIcon 6s infinite;
+`;
+
+export const ContactsLogo2 = styled(MdOutlineContacts)`
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  animation: slideIcon 6s infinite 3s;
+`;
+
+export const MainWrapper = styled.main`
+  padding: 100px 0 40px;
 `;

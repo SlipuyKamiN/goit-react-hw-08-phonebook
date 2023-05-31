@@ -24,12 +24,10 @@ export const ContactList = () => {
   })();
 
   return (
-    <>
-      <ContactsList>
-        {filteredContacts.map(contact => (
-          <ContactListItem key={contact.id} contact={contact} />
-        ))}
-      </ContactsList>
-    </>
+    <ContactsList>
+      {filteredContacts.map(contact => (
+        <ContactListItem key={contact.id} contact={contact} />
+      ))}
+    </ContactsList>
   );
 };

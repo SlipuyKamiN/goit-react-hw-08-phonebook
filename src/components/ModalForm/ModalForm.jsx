@@ -6,7 +6,10 @@ import {
   ErrMessage,
   Backdrop,
   FormTitle,
+  FormWrapper,
+  CloseButton,
 } from './ModalForm.styled';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -90,10 +93,10 @@ export const ModalForm = ({ toggleModal }) => {
 
   return createPortal(
     <Backdrop data-backdrop onClick={handleToggleModal}>
-      <div>
-        <button data-close-modal onClick={handleToggleModal}>
-          X
-        </button>
+      <FormWrapper>
+        <CloseButton data-close-modal onClick={handleToggleModal}>
+          <AiOutlineCloseCircle size="25px" data-close-modal />
+        </CloseButton>
         <AppForm autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
           <FormTitle>Fill the form below, to add your new contact.</FormTitle>
           <FormInputLabel htmlFor={nameID}>Name</FormInputLabel>
@@ -110,7 +113,7 @@ export const ModalForm = ({ toggleModal }) => {
             )}
           </SubmitButton>
         </AppForm>
-      </div>
+      </FormWrapper>
     </Backdrop>,
     modalRoot
   );
