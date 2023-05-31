@@ -14,11 +14,13 @@ export const WelcomeTitle = styled.p`
 
 export const LogOutButton = styled.button`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   gap: 10px;
 
-  padding: 10px;
+  width: 150px;
+  height: 40px;
+  overflow: hidden;
   border-radius: 4px;
   border: 2px solid #ffffff;
   text-transform: uppercase;

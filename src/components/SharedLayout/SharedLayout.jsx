@@ -7,12 +7,14 @@ import {
   ContactsLogo1,
   ContactsLogo2,
   LogoWrapper,
+  LoadingIcon,
 } from './SharedLayout.styled';
 import UserMenu from 'components/UserMenu/UserMenu';
 import { useSelector } from 'react-redux';
 import { getIsLoggedIn } from 'redux/authSelectors';
 import { Suspense } from 'react';
 import { Navigation } from 'components/Navigation/Navigation';
+import { ToastContainer } from 'react-toastify';
 
 export const SharedLayout = () => {
   const isLoggedIn = useSelector(getIsLoggedIn);
@@ -30,11 +32,12 @@ export const SharedLayout = () => {
         <Navigation />
         {isLoggedIn && <UserMenu />}
       </Header>
-      <Suspense fallback={<div>Please wait...</div>}>
-        <MainWrapper>
+      <MainWrapper>
+        <Suspense fallback={<LoadingIcon size="150px" />}>
           <Outlet />
-        </MainWrapper>
-      </Suspense>
+        </Suspense>
+      </MainWrapper>
+      <ToastContainer />
     </Container>
   );
 };

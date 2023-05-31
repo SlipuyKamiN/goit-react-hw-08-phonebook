@@ -1,13 +1,22 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from 'redux/authOperations';
-import { getUserName } from 'redux/authSelectors';
+import { getAuthStatus, getUserName } from 'redux/authSelectors';
 import { LogOutButton, UserMenuWrapper, WelcomeTitle } from './UserMenu.styled';
 import { MdLogout } from 'react-icons/md';
 import { FaUserSecret } from 'react-icons/fa';
+import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
+import { STATUS } from 'redux/constants';
+import { notification } from 'components/SharedLayout/notification';
+const { PENDING, REJECTED } = STATUS;
 
 const UserMenu = () => {
   const dispatch = useDispatch();
   const userName = useSelector(getUserName);
+  const authStatus = useSelector(getAuthStatus);
+
+  if (authStatus === REJECTED) {
+    notification();
+  }
 
   return (
     <UserMenuWrapper>
@@ -15,12 +24,19 @@ const UserMenu = () => {
       <WelcomeTitle>{userName}</WelcomeTitle>
       <LogOutButton
         type="button"
+        disabled={authStatus === PENDING}
         onClick={() => {
           dispatch(logOut());
         }}
       >
-        <span>Log out</span>
-        <MdLogout size="16px" />
+        {authStatus === PENDING ? (
+          <LoadingIcon size="32px" />
+        ) : (
+          <>
+            <span>Log out</span>
+            <MdLogout size="16px" />
+          </>
+        )}
       </LogOutButton>
     </UserMenuWrapper>
   );

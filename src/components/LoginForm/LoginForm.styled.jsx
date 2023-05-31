@@ -59,13 +59,15 @@ export const ErrMessage = styled.span`
 
 export const SubmitButton = styled.button`
   width: 150px;
-  padding: 10px;
+  height: 40px;
   border-radius: 4px;
   border: 2px solid #ffffff;
   text-transform: uppercase;
   text-align: center;
   background-color: transparent;
   transition: background-color 250ms linear, color 250ms linear;
+  overflow: hidden;
+
   &:hover,
   &:focus,
   &:disabled {

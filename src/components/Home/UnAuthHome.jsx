@@ -20,9 +20,8 @@ export const UnAuthHome = () => {
       <HomeTextWrapper>
         <HomeTitle>Welcome to your "Be inTouch" phonebook</HomeTitle>
         <HomeDescription>
-          Here you can manage your contacts, add them, mark as favourite and
-          remove if it is outdated. To use all application functions you must be
-          authorized
+          Here you can manage your contacts, call them, add or remove if it is
+          outdated. To use all application functions you must be authorized
         </HomeDescription>
         <HomeAuthLinksList>
           <li>

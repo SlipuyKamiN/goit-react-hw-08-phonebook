@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { MdContacts, MdOutlineContacts } from 'react-icons/md';
+import { FaReact } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
@@ -75,4 +76,11 @@ export const ContactsLogo2 = styled(MdOutlineContacts)`
 
 export const MainWrapper = styled.main`
   padding: 100px 0 40px;
+`;
+
+export const LoadingIcon = styled(FaReact)`
+  display: block;
+  margin-top: 100px;
+  margin: auto;
+  animation: loading 2s linear;
 `;

@@ -4,14 +4,15 @@ import {
   ContactName,
   ContactNumber,
 } from './ContactListItem.styled';
-import { RotatingLines } from 'react-loader-spinner';
-// import { useDeleteContactMutation } from 'redux/contactsSlice';
 import { deleteContact } from 'redux/contactsOperations';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaUserGraduate, FaUserTimes } from 'react-icons/fa';
 import { LuPhoneCall } from 'react-icons/lu';
+import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
+import { getContactsStatus } from 'redux/contactsSelectors';
 
 export const ContactListItem = ({ contact }) => {
+  const contactsStatus = useSelector(getContactsStatus);
   const dispatch = useDispatch();
 
   const { id, name, number } = contact;
@@ -28,13 +29,13 @@ export const ContactListItem = ({ contact }) => {
       </div>
       <DeleteButton
         type="button"
-        disabled={false}
+        disabled={contactsStatus === 'pending'}
         onClick={() => {
           dispatch(deleteContact({ id }));
         }}
       >
-        {false ? (
-          <RotatingLines strokeColor="white" width="12" />
+        {contactsStatus === 'pending' ? (
+          <LoadingIcon size="32px" />
         ) : (
           <FaUserTimes size="20px" />
         )}

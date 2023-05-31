@@ -7,16 +7,23 @@ import {
   FormWrapper,
   SubmitButton,
 } from './LoginForm.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logIn } from 'redux/authOperations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { nanoid } from 'nanoid';
+import { getAuthStatus, getUserName } from 'redux/authSelectors';
+import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
+import { STATUS } from 'redux/constants';
+import { notification } from 'components/SharedLayout/notification';
+const { PENDING, FULFILLED } = STATUS;
 
 export const LoginForm = () => {
   const emailID = nanoid();
   const passwordID = nanoid();
+  const authStatus = useSelector(getAuthStatus);
+  const userName = useSelector(getUserName);
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -41,7 +48,14 @@ export const LoginForm = () => {
 
   const handleFormSubmit = ({ email, password }) => {
     dispatch(logIn({ email, password }));
-    reset({ email: '', password: '' });
+
+    if (authStatus === FULFILLED) {
+      reset({ email: '', password: '' });
+      notification(`Welcome ${userName}`, 'success');
+      return;
+    }
+
+    // notification('Something went wrong. Please, check the inputed info');
   };
   return (
     <FormWrapper>
@@ -57,7 +71,9 @@ export const LoginForm = () => {
           id={passwordID}
         ></FormInput>
         {errors.password && <ErrMessage>{errors.password.message}</ErrMessage>}
-        <SubmitButton type="submit">sign in</SubmitButton>
+        <SubmitButton type="submit" disabled={authStatus === PENDING}>
+          {authStatus === PENDING ? <LoadingIcon size="32px" /> : 'sign in'}
+        </SubmitButton>
       </AppForm>
     </FormWrapper>
   );

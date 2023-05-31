@@ -18,7 +18,7 @@ export const FormWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #ffffff66;
+  background-color: #ffffffcc;
   box-shadow: #ffffff 0px 0px 20px;
 
   width: 300px;

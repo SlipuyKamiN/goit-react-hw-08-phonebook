@@ -8,6 +8,7 @@ import { getAuthStatus } from 'redux/authSelectors';
 import { STATUS } from 'redux/constants';
 import PrivateRoute from 'components/PrivateRoute';
 import RestrictedRoute from 'components/RestrictedRoute';
+import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
 const Register = lazy(() => import('pages/Register/Register'));
 const Login = lazy(() => import('pages/Login/Login'));
 const Contacts = lazy(() => import('pages/Contacts/Contacts'));
@@ -23,7 +24,7 @@ export const App = () => {
   }, [dispatch]);
 
   return authStatus === STATUS.IDLE ? (
-    <div>Please wait...</div>
+    <LoadingIcon size="150px" />
   ) : (
     <Routes>
       <Route path="/" element={<SharedLayout />}>

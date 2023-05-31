@@ -62,6 +62,7 @@ const authSlice = createSlice({
       state.user.name = initialState.user.name;
       state.user.email = initialState.user.email;
       state.token = initialState.token;
+      state.status = FULFILLED;
       state.isLoggedIn = false;
     },
     [recoverySession.pending](state) {

@@ -23,10 +23,9 @@ export const createNewUser = createAsyncThunk(
       });
 
       token.set(createdUser.data.token);
-      console.log(createdUser);
       return createdUser.data;
     } catch (error) {
-      console.log(error);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -43,7 +42,9 @@ export const logIn = createAsyncThunk(
       token.set(response.data.token);
 
       return response.data;
-    } catch (error) {}
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
 );
 
@@ -54,7 +55,9 @@ export const logOut = createAsyncThunk('users/logOut', async (_, thunkAPI) => {
     token.reset();
 
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
 });
 
 export const recoverySession = createAsyncThunk(

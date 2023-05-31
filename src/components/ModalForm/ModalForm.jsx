@@ -14,18 +14,23 @@ import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { RotatingLines } from 'react-loader-spinner';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contactsOperations';
 import { useEffect } from 'react';
+import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
+import { getContacts, getContactsStatus } from 'redux/contactsSelectors';
+import { notification } from 'components/SharedLayout/notification';
+import { STATUS } from 'redux/constants';
+const { PENDING, FULFILLED } = STATUS;
 
 const modalRoot = document.querySelector('#modal-root');
 
 export const ModalForm = ({ toggleModal }) => {
   const nameID = nanoid();
   const numberID = nanoid();
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(getContacts);
+  const contactsStatus = useSelector(getContactsStatus);
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -82,13 +87,16 @@ export const ModalForm = ({ toggleModal }) => {
     );
 
     if (isNameAlreadyInContacts) {
-      // notification(`"${name}" is already in contacts.`);
+      notification(`"${name}" is already in contacts.`);
       return;
     }
 
-    dispatch(addContact({ name, number }));
-    reset({ name: '', number: '' });
-    toggleModal();
+    if (contactsStatus === FULFILLED) {
+      dispatch(addContact({ name, number }));
+      reset({ name: '', number: '' });
+      toggleModal();
+      notification(`Contact '${name}' has been successfully added.`, 'success');
+    }
   };
 
   return createPortal(
@@ -105,11 +113,11 @@ export const ModalForm = ({ toggleModal }) => {
           <FormInputLabel htmlFor={numberID}>Number</FormInputLabel>
           <FormInput type="text" {...register('number')} id={numberID} />
           {errors.number && <ErrMessage>{errors.number.message}</ErrMessage>}
-          <SubmitButton type="submit" disabled={false}>
-            {false ? (
-              <RotatingLines strokeColor="white" width="12" />
+          <SubmitButton type="submit" disabled={contactsStatus === PENDING}>
+            {contactsStatus === PENDING ? (
+              <LoadingIcon size="32px" />
             ) : (
-              'Add contact'
+              'add contact'
             )}
           </SubmitButton>
         </AppForm>

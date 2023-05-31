@@ -1,8 +1,8 @@
-import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const notification = (
-  message = 'Something went wrong...',
+  message = 'Oops. Something went wrong...',
   type = 'error'
 ) => {
   const toastConfig = {
