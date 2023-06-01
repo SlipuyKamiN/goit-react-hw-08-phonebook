@@ -12,6 +12,26 @@ export const ListItem = styled.li`
   border-bottom: 1px solid #000000;
 `;
 
+export const Checkbox = styled.input`
+  position: absolute;
+  top: -1;
+  visibility: hidden;
+  pointer-events: none;
+
+  &:checked + label {
+    color: #ffffff;
+  }
+`;
+
+export const CheckboxLabel = styled.label`
+  cursor: pointer;
+  transition: color 250ms linear;
+  &:hover,
+  &:focus {
+    color: #ffffff66;
+  }
+`;
+
 export const ContactName = styled.p`
   font-size: 18px;
   margin-bottom: 5px;

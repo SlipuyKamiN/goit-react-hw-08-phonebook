@@ -36,7 +36,10 @@ export const RegisterForm = () => {
       .required(),
     email: yup
       .string()
-      .matches('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$', 'Wrong email format')
+      .matches(
+        '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$',
+        'Email can contain letters, digits and may contain "@" and "." example@mail.com'
+      )
       .required(),
     password: yup
       .string()
@@ -54,14 +57,16 @@ export const RegisterForm = () => {
   });
 
   const handleFormSubmit = ({ name, email, password }) => {
-    dispatch(createNewUser({ name, email, password }));
-
-    if (authStatus === FULFILLED) {
-      reset({ name: '', email: '', password: '' });
-      return;
-    }
-
-    notification('Something went wrong. Please, check the inputed info');
+    dispatch(createNewUser({ name, email, password })).then(response => {
+      if (response.meta.requestStatus === FULFILLED) {
+        reset({ name: '', email: '', password: '' });
+        notification(`Welcome to your 'Be inTouch'`, 'success');
+        return;
+      }
+      notification(
+        'Please, check the inputed info. Maybe, you already have an account?'
+      );
+    });
   };
   return (
     <FormWrapper>
@@ -72,7 +77,7 @@ export const RegisterForm = () => {
         {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
         <FormInputLabel htmlFor={emailID}>Email</FormInputLabel>
         <FormInput type="email" {...register('email')} id={emailID}></FormInput>
-        {errors.name && <ErrMessage>{errors.name.message}</ErrMessage>}
+        {errors.email && <ErrMessage>{errors.email.message}</ErrMessage>}
         <FormInputLabel htmlFor={passwordID}>Password</FormInputLabel>
         <FormInput
           type="password"

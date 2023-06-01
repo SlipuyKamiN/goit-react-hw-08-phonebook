@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { nanoid } from 'nanoid';
-import { getAuthStatus, getUserName } from 'redux/authSelectors';
+import { getAuthStatus } from 'redux/authSelectors';
 import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
 import { STATUS } from 'redux/constants';
 import { notification } from 'components/SharedLayout/notification';
@@ -23,13 +23,15 @@ export const LoginForm = () => {
   const emailID = nanoid();
   const passwordID = nanoid();
   const authStatus = useSelector(getAuthStatus);
-  const userName = useSelector(getUserName);
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
     email: yup
       .string()
-      .matches('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$', 'Wrong email format')
+      .matches(
+        '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$',
+        'Email can contain letters, digits and may contain "@" and "." example@mail.com'
+      )
       .required(),
     password: yup
       .string()
@@ -47,15 +49,14 @@ export const LoginForm = () => {
   });
 
   const handleFormSubmit = ({ email, password }) => {
-    dispatch(logIn({ email, password }));
-
-    if (authStatus === FULFILLED) {
-      reset({ email: '', password: '' });
-      notification(`Welcome ${userName}`, 'success');
-      return;
-    }
-
-    // notification('Something went wrong. Please, check the inputed info');
+    dispatch(logIn({ email, password })).then(response => {
+      if (response.meta.requestStatus === FULFILLED) {
+        reset({ email: '', password: '' });
+        notification(`Welcome to your 'Be inTouch'`, 'success');
+        return;
+      }
+      notification('Something went wrong. Please, check the inputed info');
+    });
   };
   return (
     <FormWrapper>

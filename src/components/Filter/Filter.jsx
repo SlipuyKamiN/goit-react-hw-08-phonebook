@@ -6,6 +6,7 @@ import {
   AddContactButton,
   FilterWrapper,
 } from './Filter.styled';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { filter } from 'redux/filterSlice';
 import { FaUserPlus } from 'react-icons/fa';
@@ -35,4 +36,8 @@ export const Filter = ({ toggleModal }) => {
       </InputWrapper>
     </FilterWrapper>
   );
+};
+
+Filter.propTypes = {
+  toggleModal: PropTypes.func.isRequired,
 };

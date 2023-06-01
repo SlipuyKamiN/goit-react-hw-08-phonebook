@@ -105,3 +105,8 @@ button {
     opacity: 0.5;
   }
 }
+
+.Toastify__toast-theme--dark {
+  background-color: #00000055;
+  backdrop-filter: blur(10px);
+}

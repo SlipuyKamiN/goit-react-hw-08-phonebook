@@ -7,7 +7,7 @@ export const notification = (
 ) => {
   const toastConfig = {
     position: 'top-center',
-    autoClose: 3000,
+    autoClose: 2500,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

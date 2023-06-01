@@ -4,22 +4,48 @@ import {
   ContactName,
   ContactNumber,
 } from './ContactListItem.styled';
+import PropTypes from 'prop-types';
 import { deleteContact } from 'redux/contactsOperations';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaUserGraduate, FaUserTimes } from 'react-icons/fa';
+
 import { LuPhoneCall } from 'react-icons/lu';
 import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
-import { getContactsStatus } from 'redux/contactsSelectors';
+import {
+  getContactsError,
+  getContactsOperation,
+} from 'redux/contactsSelectors';
+import { STATUS } from 'redux/constants';
+import { notification } from 'components/SharedLayout/notification';
+const { FULFILLED } = STATUS;
 
 export const ContactListItem = ({ contact }) => {
-  const contactsStatus = useSelector(getContactsStatus);
+  const contactsOperation = useSelector(getContactsOperation);
+  const contactsError = useSelector(getContactsError);
   const dispatch = useDispatch();
 
   const { id, name, number } = contact;
 
+  const handleDeleteContact = id => {
+    dispatch(deleteContact({ id })).then(response => {
+      if (response.meta.requestStatus === FULFILLED && !contactsError) {
+        notification(
+          `Contact '${name}' has been successfully deleted.`,
+          'success'
+        );
+        return;
+      }
+
+      notification(
+        'We are failed with deleting your contact. Please, try again...'
+      );
+    });
+  };
+
   return (
     <ListItem>
       <FaUserGraduate size="40px" />
+
       <div>
         <ContactName>{name}</ContactName>
         <ContactNumber href={`tel:${number}}`}>
@@ -29,12 +55,12 @@ export const ContactListItem = ({ contact }) => {
       </div>
       <DeleteButton
         type="button"
-        disabled={contactsStatus === 'pending'}
+        disabled={contactsOperation === id}
         onClick={() => {
-          dispatch(deleteContact({ id }));
+          handleDeleteContact(id);
         }}
       >
-        {contactsStatus === 'pending' ? (
+        {contactsOperation === id ? (
           <LoadingIcon size="32px" />
         ) : (
           <FaUserTimes size="20px" />
@@ -42,4 +68,8 @@ export const ContactListItem = ({ contact }) => {
       </DeleteButton>
     </ListItem>
   );
+};
+
+ContactListItem.propTypes = {
+  contact: PropTypes.object.isRequired,
 };

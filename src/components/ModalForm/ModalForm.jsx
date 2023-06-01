@@ -9,6 +9,7 @@ import {
   FormWrapper,
   CloseButton,
 } from './ModalForm.styled';
+import PropTypes from 'prop-types';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
@@ -19,10 +20,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contactsOperations';
 import { useEffect } from 'react';
 import { LoadingIcon } from 'components/SharedLayout/SharedLayout.styled';
-import { getContacts, getContactsStatus } from 'redux/contactsSelectors';
+import {
+  getContacts,
+  getContactsError,
+  getContactsOperation,
+} from 'redux/contactsSelectors';
 import { notification } from 'components/SharedLayout/notification';
 import { STATUS } from 'redux/constants';
-const { PENDING, FULFILLED } = STATUS;
+const { FULFILLED } = STATUS;
 
 const modalRoot = document.querySelector('#modal-root');
 
@@ -30,7 +35,8 @@ export const ModalForm = ({ toggleModal }) => {
   const nameID = nanoid();
   const numberID = nanoid();
   const contacts = useSelector(getContacts);
-  const contactsStatus = useSelector(getContactsStatus);
+  const contactsOperation = useSelector(getContactsOperation);
+  const contactsError = useSelector(getContactsError);
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -79,7 +85,7 @@ export const ModalForm = ({ toggleModal }) => {
     };
   });
 
-  const handleFormSubmit = ({ name, number }) => {
+  const handleFormSubmit = async ({ name, number }) => {
     const normalizedName = name.toLowerCase();
 
     const isNameAlreadyInContacts = contacts.find(
@@ -91,12 +97,21 @@ export const ModalForm = ({ toggleModal }) => {
       return;
     }
 
-    if (contactsStatus === FULFILLED) {
-      dispatch(addContact({ name, number }));
-      reset({ name: '', number: '' });
-      toggleModal();
-      notification(`Contact '${name}' has been successfully added.`, 'success');
-    }
+    dispatch(addContact({ name, number })).then(response => {
+      if (response.meta.requestStatus === FULFILLED && !contactsError) {
+        notification(
+          `Contact '${name}' has been successfully added.`,
+          'success'
+        );
+        reset({ name: '', number: '' });
+        toggleModal();
+        return;
+      }
+
+      notification(
+        'We are failed with adding your new contact. Please, try again...'
+      );
+    });
   };
 
   return createPortal(
@@ -113,8 +128,11 @@ export const ModalForm = ({ toggleModal }) => {
           <FormInputLabel htmlFor={numberID}>Number</FormInputLabel>
           <FormInput type="text" {...register('number')} id={numberID} />
           {errors.number && <ErrMessage>{errors.number.message}</ErrMessage>}
-          <SubmitButton type="submit" disabled={contactsStatus === PENDING}>
-            {contactsStatus === PENDING ? (
+          <SubmitButton
+            type="submit"
+            disabled={contactsOperation === 'addContact'}
+          >
+            {contactsOperation === 'addContact' ? (
               <LoadingIcon size="32px" />
             ) : (
               'add contact'
@@ -125,4 +143,8 @@ export const ModalForm = ({ toggleModal }) => {
     </Backdrop>,
     modalRoot
   );
+};
+
+ModalForm.propTypes = {
+  toggleModal: PropTypes.func.isRequired,
 };

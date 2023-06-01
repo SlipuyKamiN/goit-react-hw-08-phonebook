@@ -44,6 +44,7 @@ export const Header = styled.header`
   gap: 20px;
   height: 60px;
   border-bottom: 3px solid black;
+  backdrop-filter: blur(10px);
 `;
 
 export const LogoWrapper = styled(Link)`
