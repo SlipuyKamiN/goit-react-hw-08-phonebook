@@ -16,7 +16,7 @@ export const ErrorPage = () => {
         <MdReportGmailerrorred size="200px" />
       </UserLogo>
       <HomeTextWrapper>
-        <HomeTitle>Error 404</HomeTitle>
+        <HomeTitle>ERROR 404</HomeTitle>
         <HomeDescription>
           Sorry, page is not found. Try navigate to home page.
         </HomeDescription>
